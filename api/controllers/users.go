@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
   "../models"
 
@@ -11,7 +10,6 @@ import (
 
 // Test this is for testing packages
 func Test(c echo.Context) error {
-	fmt.Println("helloWorld")
 	return c.String(http.StatusOK, "helloworld from Users")
 }
 
