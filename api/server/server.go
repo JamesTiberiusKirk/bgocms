@@ -34,6 +34,8 @@ func initRoutes(e *echo.Echo) *echo.Echo{
 	e.GET("/users", controllers.GetUsers)
 	e.POST("/users", controllers.AddUser)
 
+  e.POST("/register", controllers.Register)
+
   return e
 }
 
