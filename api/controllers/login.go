@@ -23,11 +23,28 @@ func Register(c echo.Context) error {
   }
 
   newUser.Pass = string(hash)
-  res, dbErr := dbc.InsertUserRow(newUser)
+  dbErr := dbc.InsertUserRow(newUser)
 
   if dbErr != nil {
     return c.JSON(http.StatusInternalServerError, dbErr)
   }
 
-  return c.JSON(http.StatusOK, res)
+  return c.JSON(http.StatusOK, "OK")
+}
+
+func Login(c echo.Context) error {
+  dbc := c.Get("db").(*db.Client)
+  u := models.User{}
+
+  if bindErr := c.Bind(&u); bindErr != nil {
+    return c.JSON(http.StatusInternalServerError, bindErr)
+  }
+
+
+  cu, dbErr := dbc.GetUserByName(u.Uname)
+
+  if dbErr != nil {
+    return c.JSON(http.StatusInternalServerError, dbErr)
+  }
+  return c.JSON(http.StatusOK, cu)
 }

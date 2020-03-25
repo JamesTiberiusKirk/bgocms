@@ -37,10 +37,10 @@ func AddUser(c echo.Context) error {
 		return err
 	}
 
-  res, db_err := dbc.InsertUserRow(u)
+  db_err := dbc.InsertUserRow(u)
   if db_err != nil {
     return c.JSON(http.StatusInternalServerError, db_err)
   }
 
-  return c.JSON(http.StatusCreated, res)
+  return c.JSON(http.StatusCreated, "OK")
 }

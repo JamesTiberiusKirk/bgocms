@@ -1,20 +1,28 @@
 package db
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
-
+  "github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
 type Client struct {
-	dbc *sql.DB
+	db        *sqlx.DB
+  ex        sqlx.Ext
+  committed bool
 }
 
-func NewClient() (*Client, error){
-	db, err := sql.Open("postgres", "user=postgres password=example dbname=bgocms sslmode=disable")
-  c := &Client{dbc:db}
+func NewClient(db *sqlx.DB) *Client {
+  return &Client{
+    db: db,
+    ex: db,
+  }
+}
+
+func Connect() (*Client, error){
+	db, err := sqlx.Open("postgres", "user=postgres password=example dbname=bgocms sslmode=disable")
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -23,8 +31,8 @@ func NewClient() (*Client, error){
 		panic(err)
 	} else {
 		fmt.Println("DB Connected...")
-    c.dbc = db
-		return c, nil
+    c := NewCLient(&db)
+    return c, nil
 	}
 	return nil, err
 }

@@ -1,14 +1,13 @@
 package db
 
 import (
-	"database/sql"
+//  "database/sql"
 	"fmt"
-
-	"../models"
+  "../models"
 )
 
 func (c *Client) GetUserRows() ([]models.User, int, error) {
-  dbc := c.dbc
+  dbc := c.db
 
 	sqlStatement := "SELECT * FROM users;"
 	rows, err := dbc.Query(sqlStatement)
@@ -38,14 +37,30 @@ func (c *Client) GetUserRows() ([]models.User, int, error) {
   return result, total, nil
 }
 
-func (c *Client) InsertUserRow(u models.User) (*sql.Rows, error){
-  dbc := c.dbc
+func (c *Client) InsertUserRow(u models.User) error {
+  dbc := c.ex
 
-  sqlStatement := "INSERT INTO users (uname, pass) VALUES ($1, $2);"
-  res, err := dbc.Query(sqlStatement, u.Uname, u.Pass)
+  sqlStatement := `INSERT INTO users (uname, pass) VALUES ('?', '?');`
+  //tx, err := dbc.Begin()
+
+  _, err := dbc.Exec(sqlStatement, u.Uname, u.Pass)
+  if err != nil {
+    return err
+  } else {
+    return nil
+  }
+}
+
+func (c *Client) GetUserByName(searchName string) (*models.User, error){
+  dbc := c.db
+  sqlStatement := `SELECT * FROM users WHERE users.uname LIKE '%?%';`
+  u := &models.User{}
+
+  err := dbc.QueryRow(sqlStatement, searchName).Scan(&u.ID, &u.Uname, &u.Pass)
+
   if err != nil {
     return nil, err
-  } else {
-    return res, nil
   }
+
+  return u, nil
 }

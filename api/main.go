@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	dbc, err := db.NewClient()
+	dbc, err := db.Connect()
 
   if err != nil {
     fmt.Println("error")
