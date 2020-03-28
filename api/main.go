@@ -2,8 +2,8 @@ package main
 
 import (
   "fmt"
-	"./db"
-	"./server"
+	"bgocms/db"
+	"bgocms/server"
 	_ "github.com/lib/pq"
 )
 

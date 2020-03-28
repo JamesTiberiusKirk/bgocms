@@ -2,8 +2,7 @@ package db
 
 import (
 //  "database/sql"
-	"fmt"
-  "../models"
+  "bgocms/models"
 )
 
 func (c *Client) GetUserRows() ([]models.User, int, error) {
@@ -13,7 +12,6 @@ func (c *Client) GetUserRows() ([]models.User, int, error) {
 	rows, err := dbc.Query(sqlStatement)
 
   if err != nil {
-		fmt.Println(err)
     return nil, 0, err
 	}
 
@@ -38,14 +36,14 @@ func (c *Client) GetUserRows() ([]models.User, int, error) {
 }
 
 func (c *Client) InsertUserRow(u models.User) error {
-  dbc := c.ex
+  dbc := c.db
 
-  sqlStatement := `INSERT INTO users (uname, pass) VALUES ('?', '?');`
+  sqlStatement := `INSERT INTO users (uname, pass) VALUES ($1, $2);`
   //tx, err := dbc.Begin()
 
   _, err := dbc.Exec(sqlStatement, u.Uname, u.Pass)
   if err != nil {
-    return err
+    panic(err)
   } else {
     return nil
   }
@@ -53,14 +51,14 @@ func (c *Client) InsertUserRow(u models.User) error {
 
 func (c *Client) GetUserByName(searchName string) (*models.User, error){
   dbc := c.db
-  sqlStatement := `SELECT * FROM users WHERE users.uname LIKE '%?%';`
-  u := &models.User{}
+  sqlStatement := `SELECT * FROM users WHERE users.uname=$1;`
+  u := models.User{}
 
   err := dbc.QueryRow(sqlStatement, searchName).Scan(&u.ID, &u.Uname, &u.Pass)
 
   if err != nil {
-    return nil, err
+    panic(err)
   }
 
-  return u, nil
+  return &u, nil
 }

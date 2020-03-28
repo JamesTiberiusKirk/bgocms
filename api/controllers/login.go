@@ -1,9 +1,10 @@
 package controllers
 
 import (
+  "fmt"
 	"net/http"
-  "../models"
-	"../db"
+  "bgocms/models"
+	"bgocms/db"
 	"github.com/labstack/echo"
   "golang.org/x/crypto/bcrypt"
 )
@@ -11,9 +12,10 @@ import (
 func Register(c echo.Context) error {
   dbc := c.Get("db").(*db.Client)
   newUser := models.User{}
+  fmt.Printf("REGISTER")
 
   if bindErr := c.Bind(&newUser); bindErr != nil {
-    return c.JSON(http.StatusInternalServerError, bindErr)
+    return c.JSON(http.StatusBadRequest, bindErr)
   }
 
   hash, hashErr := bcrypt.GenerateFromPassword([]byte(newUser.Pass), 10)
@@ -29,7 +31,7 @@ func Register(c echo.Context) error {
     return c.JSON(http.StatusInternalServerError, dbErr)
   }
 
-  return c.JSON(http.StatusOK, "OK")
+  return c.JSON(http.StatusCreated, "OK")
 }
 
 func Login(c echo.Context) error {
@@ -37,7 +39,7 @@ func Login(c echo.Context) error {
   u := models.User{}
 
   if bindErr := c.Bind(&u); bindErr != nil {
-    return c.JSON(http.StatusInternalServerError, bindErr)
+    return c.JSON(http.StatusBadRequest, bindErr)
   }
 
 
@@ -46,5 +48,11 @@ func Login(c echo.Context) error {
   if dbErr != nil {
     return c.JSON(http.StatusInternalServerError, dbErr)
   }
-  return c.JSON(http.StatusOK, cu)
+
+  compareErr := bcrypt.CompareHashAndPassword([]byte(cu.Pass), []byte(u.Pass))
+  if compareErr != nil {
+    return c.JSON(http.StatusUnauthorized, compareErr.Error())
+  }
+
+  return c.JSON(http.StatusOK, "Logged In")
 }

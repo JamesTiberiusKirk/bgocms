@@ -2,9 +2,8 @@ package controllers
 
 import (
 	"net/http"
-  "../models"
-
-	"../db"
+  "bgocms/models"
+	"bgocms/db"
 	"github.com/labstack/echo"
 )
 
@@ -34,7 +33,7 @@ func AddUser(c echo.Context) error {
 	u := models.User{}
 
 	if err := c.Bind(&u); err != nil {
-		return err
+    return c.JSON(http.StatusBadRequest, err)
 	}
 
   db_err := dbc.InsertUserRow(u)

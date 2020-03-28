@@ -31,7 +31,7 @@ func Connect() (*Client, error){
 		panic(err)
 	} else {
 		fmt.Println("DB Connected...")
-    c := NewCLient(&db)
+    c := NewClient(db)
     return c, nil
 	}
 	return nil, err

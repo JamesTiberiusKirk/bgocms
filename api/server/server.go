@@ -2,8 +2,8 @@ package server
 
 import (
 //  "database/sql"
-  "../db"
-	"../controllers"
+  "bgocms/db"
+	"bgocms/controllers"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -35,7 +35,7 @@ func initRoutes(e *echo.Echo) *echo.Echo{
 	e.POST("/users", controllers.AddUser)
 
   e.POST("/register", controllers.Register)
-  e.POST("/login", controllers.Register)
+  e.POST("/login", controllers.Login)
 
   return e
 }
