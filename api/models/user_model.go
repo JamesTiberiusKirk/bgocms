@@ -7,7 +7,7 @@ type User struct {
 	Pass  string `json:"pass"`
 }
 
-//Users for mutiple users
+//Users for multiple users
 type UsersResponce struct {
 	Users []User `json:"users"`
   Total int    `json:"total"`
