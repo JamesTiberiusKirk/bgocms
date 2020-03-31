@@ -20,7 +20,12 @@ func (c *Client) GetArticleRows() ([]models.Article, int ,error) {
   for rows.Next() {
     total += 1
     article := models.Article{}
-    scanErr := rows.Scan(&article)
+    scanErr := rows.Scan( &article.ID,
+                          &article.Author,
+                          &article.Title,
+                          &article.Body,
+                          &article.Created,
+                          &article.Last_edited)
     if scanErr != nil {
       return nil, 0, scanErr
     }
