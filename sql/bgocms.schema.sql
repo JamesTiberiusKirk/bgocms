@@ -20,7 +20,7 @@ CREATE TABLE articles(
   author      INT references users(id),
   title       TEXT,
   body        TEXT,
-  created     FLOAT NOT NULL,
-  last_edited FLOAT NOT NULL
+  created     TIME NULL,
+  last_edited TIME NULL
 );
 
