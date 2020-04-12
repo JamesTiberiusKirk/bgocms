@@ -6,10 +6,10 @@ import (
   "golang.org/x/crypto/bcrypt"
 )
 
-func auth(username,password string, c echo.Context) (bool, error){
+func Auth(username,password string, c echo.Context) (bool, error){
   dbc := c.Get("db").(*db.Client)
 
-  cu, dbErr := GetUserByName(username)
+  cu, dbErr := dbc.GetUserByName(username)
   if dbErr != nil {
     return false, dbErr
   }

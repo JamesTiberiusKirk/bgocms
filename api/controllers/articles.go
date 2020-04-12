@@ -20,7 +20,6 @@ func GetArticles(c echo.Context) error {
   })
 }
 
-
 func AddArticle(c echo.Context) error {
   dbc := c.Get("db").(*db.Client)
   newArticle := models.Article{}
@@ -38,7 +37,5 @@ func AddArticle(c echo.Context) error {
   if dbErr != nil {
     return c.JSON(http.StatusInternalServerError, dbErr.Error())
   }
- return c.String(http.StatusOK, "Added") 
-
-
+ return c.String(http.StatusOK, "Added")
 }

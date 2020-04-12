@@ -1,9 +1,9 @@
 package server
 
 import (
-//  "database/sql"
   "bgocms/db"
 	"bgocms/controllers"
+  "bgocms/mw"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -24,21 +24,25 @@ func Init(dbc *db.Client) *echo.Echo {
 	)
 
   e = initRoutes(e)
-
   return e
 }
 
 func initRoutes(e *echo.Echo) *echo.Echo{
-	e.GET("/test", controllers.Test)
 
+  g := e.Group("/admin")
+
+  g.Use(middleware.BasicAuth(mw.Auth))
+
+	g.POST("/articles", controllers.AddArticle)
+	g.POST("/users", controllers.AddUser)
+
+	e.GET("/test", controllers.Test)
 	e.GET("/users", controllers.GetUsers)
-	e.POST("/users", controllers.AddUser)
+  e.GET("/articles", controllers.GetArticles)
 
   e.POST("/register", controllers.Register)
   e.POST("/login", controllers.Login)
 
-	e.GET("/articles", controllers.GetArticles)
-	e.POST("/articles", controllers.AddArticle)
   return e
 }
 
