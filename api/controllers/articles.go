@@ -2,6 +2,7 @@ package controllers
 
 import(
   "time"
+//  "strconv"
   "net/http"
   "bgocms/models"
   "bgocms/db"
@@ -18,6 +19,22 @@ func GetArticles(c echo.Context) error {
     Articles: articles,
     Total: total,
   })
+}
+
+func GetActicleByID(c echo.Context) error {
+  dbc := c.Get("db").(*db.Client)
+
+  queryStr := c.QueryParam("articleId")
+ if queryStr == "" {
+    return c.String(http.StatusBadRequest, "No articleId provided")
+  }
+  result, dbErr := dbc.GetArticleRowByID(queryStr)
+
+  if dbErr != nil {
+    return c.JSON(http.StatusInternalServerError, dbErr.Error())
+  }
+
+  return c.JSON(http.StatusOK, result)
 }
 
 func AddArticle(c echo.Context) error {
