@@ -57,8 +57,6 @@ func (c *Client) GetArticleRowByID(id string) (*models.Article,  error){
     if scanErr != nil {
       return nil, scanErr
     }
-
-
   }
   return &result, nil
 }
@@ -74,5 +72,3 @@ func (c *Client) InsertArticleRow(a models.Article) error {
 
   return nil
 }
-
-
