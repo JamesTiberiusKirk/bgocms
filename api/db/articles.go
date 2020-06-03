@@ -35,6 +35,34 @@ func (c *Client) GetArticleRows() ([]models.Article, int ,error) {
   return results, total, nil
 }
 
+func (c *Client) GetArticleRowByID(id string) (*models.Article,  error){
+  dbc := c.db
+  sql := `SELECT * FROM articles WHERE id=$1;`
+
+  rows, queryErr := dbc.Query(sql, id)
+
+  if queryErr != nil {
+    return nil, queryErr
+  }
+
+  result := models.Article{}
+
+  for rows.Next(){
+    scanErr := rows.Scan( &result.ID,
+      &result.Author,
+      &result.Title,
+      &result.Body,
+      &result.Created,
+      &result.Last_edited )
+    if scanErr != nil {
+      return nil, scanErr
+    }
+
+
+  }
+  return &result, nil
+}
+
 func (c *Client) InsertArticleRow(a models.Article) error {
   dbc := c.db
   sql := `INSERT INTO articles (author, title, body, created, last_edited) VALUES ($1, $2, $3, $4, $5);`
